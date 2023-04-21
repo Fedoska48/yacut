@@ -8,8 +8,8 @@ class URLMapForm(FlaskForm):
         'Вставьте ссылку для обработки',
         validators=[DataRequired(message='Обязательное поле')]
     )
-    short = URLField(
-        'Добавьте короткую ссылку, которую вы хотели бы получить',
+    short = StringField(
+        'Вариант короткой ссылки',
         validators=[Length(1, 16), Optional()]
     )
     submit = SubmitField('Добавить')

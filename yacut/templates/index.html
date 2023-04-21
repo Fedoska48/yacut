@@ -13,20 +13,27 @@
         <div class="col-sm">
         </div>
         <div class="col-sm">
-          <form>
+          <form method="POST" novalidate>
+            {{ form.csrf_token }}
             <div>
               <div>
-                <input type="text" class="form-control form-control-lg py-2 mb-3" id="form-title" name=""
-                  placeholder="Длинная ссылка">
-                <p><span style="color:red">Текст возможной ошибки</span></p>
+                {{ form.original(type="text", class="form-control form-control-lg py-2 mb-3", id="form-title",
+                  placeholder=form.original.label.text) }}  <br/>
+<!--                <input type="text" class="form-control form-control-lg py-2 mb-3" id="form-title" name=""-->
+<!--                  placeholder="Длинная ссылка">-->
+<!--                {{ form.original.label }} {{ form.original }} <br/>-->
+<!--                <p><span style="color:red">Текст возможной ошибки</span></p>-->
               </div>
               <div>
-                <input type="url" class="form-control form-control-lg py-2 mb-3" id="form-link" name=""
-                  placeholder="Ваш вариант короткой ссылки">
-                <p><span style="color:red">Текст возможной ошибки</span></p>
+<!--                <input type="url" class="form-control form-control-lg py-2 mb-3" id="form-link" name=""-->
+<!--                  placeholder="Ваш вариант короткой ссылки">-->
+                {{ form.short(type="url", class="form-control form-control-lg py-2 mb-3", id="form-link",
+                  placeholder=form.short.label.text) }} <br/>
+<!--                <p><span style="color:red">Текст возможной ошибки</span></p>-->
               </div>
 
-              <input type="submit" class="btn btn-primary" value="Создать">
+<!--              <input type="submit" class="btn btn-primary" value="Создать">-->
+              {{ form.submit(type="submit", class="btn btn-primary", value=form.submit.label.text) }}
             </div>
           </form>
         </div>
