@@ -12,4 +12,4 @@ class URLMapForm(FlaskForm):
         'Вариант короткой ссылки',
         validators=[Length(1, 16), Optional()]
     )
-    submit = SubmitField('Добавить')
+    submit = SubmitField('Создать')

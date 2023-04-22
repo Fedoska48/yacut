@@ -32,7 +32,9 @@
                   {% endif %}
                 {% endwith %}  <br/>
               </div>
-              {{ form.submit(type="submit", class="btn btn-primary", value=form.submit.label.text) }}
+              <div class="d-grid gap-2 d-md-flex justify-content-center">
+              {{ form.submit(type="submit", class="btn btn-primary me-md-2", value=form.submit.label.text) }}
+              </div>
             </div>
           </form>
         </div>
@@ -45,11 +47,16 @@
       <div class="row ">
         <div class="col-sm">
         </div>
+        {% if url_link %}
         <div class="col-sm">
           <p class="text-center">
-          <h5 class="text-center">Пример информационного сообщения</h5>
+          <h5 class="text-center">Ваша новая ссылка: <br>
+          <a href="http://{{ url_link.short }}">{{ url_link.short }}</a>
+          </h5>
+
           </p>
         </div>
+        {% endif %}
         <div class="col-sm">
         </div>
       </div>
