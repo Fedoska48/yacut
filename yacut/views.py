@@ -35,8 +35,8 @@ def create_shortlink():
     return render_template('index.html', form=form)
 
 
-@app.route('/<string:short>/')
+@app.route('/<string:short>')
 def url_routing(short):
     """Маршрутизация ссылки short в original."""
     url_object = URLMap.query.filter_by(short=short).first_or_404()
-    return redirect(url_object.original, code=302)
+    return redirect(url_object.original)

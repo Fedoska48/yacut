@@ -1,3 +1,9 @@
 export FLASK_APP=yacut
 
 export FLASK_ENV=development
+
+FLASK_RUN_HOST=localhost
+FLASK_RUN_PORT=80
+FLASK_ENV=development
+
+http://127.0.0.1:5000/
