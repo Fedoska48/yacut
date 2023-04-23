@@ -1,6 +1,12 @@
 from datetime import datetime
 
+from settings import DOMAIN
 from yacut import db
+
+API_FIELDS = {
+    'url': 'original',
+    'custom_id': 'short',
+}
 
 
 class URLMap(db.Model):
@@ -10,14 +16,16 @@ class URLMap(db.Model):
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 
     def to_dict(self):
+        """Преобразование объекта модели в словарь (словарь -> JSON)."""
         return dict(
-            id=self.id,
-            original=self.original,
-            short=self.short,
-            timestamp=self.timestamp
+            url=self.original,
+            short_link=DOMAIN + self.short,
         )
 
     def from_dict(self, data):
-        for field in ['original', 'short']:
+        """Преобразование словаря в объект модели (JSON -> словарь).
+        В пустой объект класса URLMap добавляются поля полученные в POST."""
+        for field in API_FIELDS:
+            # url, custom_id
             if field in data:
-                setattr(self, field, data[field])
+                setattr(self, API_FIELDS[field], data[field])

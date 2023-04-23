@@ -1,7 +1,7 @@
 import os
 
 URL_POSTFIX_SIZE = 6
-DOMAIN = 'http://127.0.0.1:5000/'
+DOMAIN = 'http://localhost/'
 
 
 class Config(object):

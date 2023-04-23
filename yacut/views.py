@@ -18,7 +18,7 @@ def create_shortlink():
         else:
             custom_id = form.custom_id.data
             if URLMap.query.filter_by(short=custom_id).first():
-                flash('Такая короткая ссылка уже существует!', 'unique-short')
+                flash(f'Имя {custom_id} уже занято!', 'unique-short')
                 return render_template('index.html', form=form)
         url = URLMap(
             original=form.original_link.data,
@@ -39,4 +39,4 @@ def create_shortlink():
 def url_routing(short):
     """Маршрутизация ссылки short в original."""
     url_object = URLMap.query.filter_by(short=short).first_or_404()
-    return redirect(url_object.original)
+    return redirect(url_object.original, code=302)
