@@ -1,12 +1,7 @@
 from datetime import datetime
 
-from settings import DOMAIN
+from settings import API_FIELDS, DOMAIN
 from yacut import db
-
-API_FIELDS = {
-    'url': 'original',
-    'custom_id': 'short',
-}
 
 
 class URLMap(db.Model):
@@ -26,6 +21,5 @@ class URLMap(db.Model):
         """Преобразование словаря в объект модели (JSON -> словарь).
         В пустой объект класса URLMap добавляются поля полученные в POST."""
         for field in API_FIELDS:
-            # url, custom_id
             if field in data:
                 setattr(self, API_FIELDS[field], data[field])
