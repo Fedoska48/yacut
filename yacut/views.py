@@ -12,25 +12,25 @@ def create_shortlink():
     """Страница генерации новой ссылки."""
     form = URLMapForm()
     if form.validate_on_submit():
-        short = form.short.data
+        short = form.custom_id.data
         if not short:
             short = get_unique_short_id()
         else:
-            short = form.short.data
-            if URLMap.query.filter_by(short=short).first():
+            custom_id = form.custom_id.data
+            if URLMap.query.filter_by(short=custom_id).first():
                 flash('Такая короткая ссылка уже существует!', 'unique-short')
                 return render_template('index.html', form=form)
         url = URLMap(
-            original=form.original.data,
+            original=form.original_link.data,
             short=short,
         )
         db.session.add(url)
         db.session.commit()
-        short_id = URLMap.query.get_or_404(url.id)
+        custom_id = URLMap.query.get_or_404(url.id)
         return render_template(
             'index.html',
             form=form,
-            url_link=DOMAIN + short_id.short
+            url_link=DOMAIN + custom_id.short
         )
     return render_template('index.html', form=form)
 

@@ -9,14 +9,14 @@ from .utils import get_unique_short_id
 
 
 @app.route('/api/id/', methods=['POST'])
-def add_shortlink():
+def create_shortlink_api():
     """POST-запрос на создание новой короткой ссылки."""
     data = request.get_json()
-    if 'original' not in data:
+    if 'original_link' not in data:
         raise InvalidAPIUsage('Отсутствуют обязательные поля')
-    if 'short' not in data:
-        data['short'] = get_unique_short_id()
-    if URLMap.query.filter_by(short=data['short']).first() is not None:
+    if 'custom_id' not in data:
+        data['custom_id'] = get_unique_short_id()
+    if URLMap.query.filter_by(short=data['custom_id']).first() is not None:
         raise InvalidAPIUsage('Такая короткая ссылка уже существует')
     url_map = URLMap()
     url_map.from_dict(data)
@@ -25,7 +25,10 @@ def add_shortlink():
     return jsonify({'url_map': url_map.to_dict()}), 201
 
 
-# @app.route('/api/id/<short_id>/', methods=['GET'])
-# def get_original_link(short_id):
-#     """Получение оригинальной ссылки по указанному короткому идентификатору."""
-#     pass
+@app.route('/api/id/<short_id>/', methods=['GET'])
+def get_original_link(short_id):
+    """Получение оригинальной ссылки по указанному короткому идентификатору."""
+    url_map = URLMap.query.filter_by(short=short_id).first()
+    if url_map is not None:
+        return jsonify({'url': url_map.original}), 200
+    raise InvalidAPIUsage('Данные отсутствуют', 404)

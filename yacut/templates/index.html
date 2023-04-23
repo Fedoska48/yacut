@@ -17,13 +17,13 @@
             {{ form.csrf_token }}
             <div>
               <div>
-                {{ form.original(type="text", class="form-control form-control-lg py-2 mb-3", id="form-title",
-                  placeholder=form.original.label.text) }}
+                {{ form.original_link(type="text", class="form-control form-control-lg py-2 mb-3", id="form-title",
+                  placeholder=form.original_link.label.text) }}
 <!--                <p><span style="color:red">Текст возможной ошибки</span></p>-->
               </div>
               <div>
-                {{ form.short(type="url", class="form-control form-control-lg py-2 mb-3", id="form-link",
-                  placeholder=form.short.label.text) }}
+                {{ form.custom_id(type="url", class="form-control form-control-lg py-2 mb-3", id="form-link",
+                  placeholder=form.custom_id.label.text) }}
                 {% with messages = get_flashed_messages(category_filter=["unique-short"]) %}
                   {% if messages %}
                     {% for message in messages %}
