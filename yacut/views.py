@@ -6,6 +6,7 @@ from yacut.forms import URLMapForm
 from yacut.models import URLMap
 from yacut.utils import get_unique_short_id
 
+VALIDATION_ERROR = 'Данные не прошли валидацию. Проверьте данные.'
 
 @app.route('/', methods=['GET', 'POST'])
 def create_shortlink():
@@ -18,7 +19,7 @@ def create_shortlink():
         else:
             custom_id = form.custom_id.data
             if URLMap.query.filter_by(short=custom_id).first():
-                flash(ALREADY_EXISTS_MAIN.format(custom_id), 'unique-short')
+                flash(ALREADY_EXISTS_MAIN.format(custom_id))
                 return render_template('index.html', form=form)
         url = URLMap(
             original=form.original_link.data,
@@ -32,6 +33,7 @@ def create_shortlink():
             form=form,
             url_link=DOMAIN + custom_id.short
         )
+    flash(VALIDATION_ERROR)
     return render_template('index.html', form=form)
 
 
