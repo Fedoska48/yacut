@@ -6,7 +6,7 @@ from wtforms.validators import DataRequired, Length, Optional
 class URLMapForm(FlaskForm):
     original_link = TextAreaField(
         'Вставьте ссылку для обработки',
-        validators=[DataRequired(message='Обязательное поле')]
+        validators=[Length(1, 512), DataRequired(message='Обязательное поле')]
     )
     custom_id = StringField(
         'Вариант короткой ссылки',
