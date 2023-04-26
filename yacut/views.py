@@ -4,7 +4,6 @@ from yacut import app
 from yacut.forms import URLMapForm
 from yacut.models import URLMap
 
-VALIDATION_ERROR = 'Данные не прошли валидацию. Проверьте данные.'
 ALREADY_EXISTS_MAIN = 'Имя {} уже занято!'
 
 

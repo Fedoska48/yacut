@@ -3,7 +3,7 @@ from flask import jsonify, request
 from yacut import app
 
 from .error_handlers import InvalidAPIUsage
-from .models import URLMap
+from .models import URLMap, PATTERN_ERROR
 
 ALREADY_EXISTS_API = 'Имя "{}" уже занято.'
 NO_DATA = 'Отсутствует тело запроса'

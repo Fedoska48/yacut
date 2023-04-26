@@ -8,6 +8,8 @@ from flask import url_for
 from yacut import db
 
 # letters, digits
+from yacut.error_handlers import InvalidAPIUsage
+
 PATTERN = r'^[a-zA-Z0-9]{1,16}$'
 LETTERS_AND_DIGITS = string.ascii_letters + string.digits
 URL_POSTFIX_SIZE = 6
@@ -19,7 +21,7 @@ PATTERN_ERROR = 'Указано недопустимое имя для коро�
 ORIGINAL_LEN_ERROR = ('Длинна входной ссылки должна быть менее {} символов.'
                       'Ваш  размер: {}')
 SHORT_LEN_ERROR = ('Вариант короткой ссылки должен быть не больше {} символов.'
-                   'Ваш  размер: {}')
+                   'Ваш размер: {}')
 
 
 class URLMap(db.Model):
@@ -65,22 +67,22 @@ class URLMap(db.Model):
         return URLMap.query.filter_by(short=short).first_or_404()
 
     @staticmethod
+    def validate_short_by_pattern(short, pattern=PATTERN):
+        return fullmatch(pattern, short)
+
+    @staticmethod
     def create(original, short=None):
         """Создать объект в БД."""
         if short in [None, ""]:
             short = URLMap.get_unique_short_id()
-        if not fullmatch(PATTERN, short):
-            raise ValueError(PATTERN_ERROR)
+
         original_user_len = len(original)
-        short_user_len = len(short)
         if original_user_len > ORIGINAL_MAX_LEN:
             raise ValueError(
                 ORIGINAL_LEN_ERROR.format(ORIGINAL_MAX_LEN, original_user_len)
             )
-        if short_user_len > SHORT_MAX_LEN:
-            raise ValueError(
-                SHORT_LEN_ERROR.format(SHORT_MAX_LEN, short_user_len)
-            )
+        if not URLMap.validate_short_by_pattern(short):
+            raise InvalidAPIUsage(PATTERN_ERROR)
         url_map = URLMap(
             original=original,
             short=short,
