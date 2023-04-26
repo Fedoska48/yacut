@@ -2,8 +2,8 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired, Length, Optional, ValidationError
 
-from yacut.models import (ORIGINAL_MAX_LEN, SHORT_MAX_LEN, LETTERS_AND_DIGITS,
-                          PATTERN_ERROR, URLMap)
+from yacut.models import (LETTERS_AND_DIGITS, ORIGINAL_MAX_LEN, PATTERN_ERROR,
+                          SHORT_MAX_LEN, URLMap)
 
 ORIGINAL_LINK_FIELD_TEXT = 'Вставьте ссылку для обработки'
 CUSTOM_ID_FIELD_TEXT = 'Вариант короткой ссылки'

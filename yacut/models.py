@@ -6,10 +6,9 @@ from re import fullmatch
 from flask import url_for
 
 from yacut import db
-
-# letters, digits
 from yacut.error_handlers import InvalidAPIUsage
 
+# letters, digits
 PATTERN = r'^[a-zA-Z0-9]{1,16}$'
 LETTERS_AND_DIGITS = string.ascii_letters + string.digits
 URL_POSTFIX_SIZE = 6
