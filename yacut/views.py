@@ -1,6 +1,5 @@
 from flask import flash, redirect, render_template, url_for
 
-from settings import DOMAIN
 from yacut import app
 from yacut.forms import URLMapForm
 from yacut.models import URLMap
@@ -19,13 +18,12 @@ def create_shortlink():
     if URLMap.get_short(short):
         flash(ALREADY_EXISTS_MAIN.format(short))
         return render_template('index.html', form=form)
-    URLMap.create(form.original_link.data, short)
+    url_map = URLMap.create(form.original_link.data, short)
     return render_template(
         'index.html',
         form=form,
-        url_link=url_for('url_routing', short=short, _external=True)
+        url_link=url_for('url_routing', short=url_map.short, _external=True)
     )
-
 
 
 @app.route('/<string:short>')

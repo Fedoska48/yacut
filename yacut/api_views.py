@@ -17,13 +17,12 @@ def create_shortlink_api():
     data = request.get_json()
     if not data:
         raise InvalidAPIUsage(NO_DATA)
-    if 'url' in data:
-        short = data['custom_id']
-        if URLMap.get_short(short) is not None:
-            raise InvalidAPIUsage(ALREADY_EXISTS_API.format(short))
-        url_map = URLMap.create(data['url'], short)
-        return jsonify(url_map.to_dict()), 201
-    raise InvalidAPIUsage(REQUIRED_URL_FIELD)
+    if 'url' not in data:
+        raise InvalidAPIUsage(REQUIRED_URL_FIELD)
+    short = data.get('custom_id')
+    if URLMap.get_short(short) is not None:
+        raise InvalidAPIUsage(ALREADY_EXISTS_API.format(short))
+    return jsonify(URLMap.create(data['url'], short).to_dict()), 201
 
 
 @app.route('/api/id/<short_id>/', methods=['GET'])

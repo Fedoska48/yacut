@@ -15,10 +15,9 @@ SHORT_MAX_LEN = 16
 ORIGINAL_MAX_LEN = 512
 
 # messages
-PATTERN_ERROR = ('Указано недопустимое имя для короткой ссылки. '
-                 'Используйте цифры и латинские буквы.')
+PATTERN_ERROR = 'Указано недопустимое имя для короткой ссылки'
 ORIGINAL_LEN_ERROR = ('Длинна входной ссылки должна быть менее {} символов.'
-                      ' Ваш  размер: {}')
+                      'Ваш  размер: {}')
 SHORT_LEN_ERROR = ('Вариант короткой ссылки должен быть не больше {} символов.'
                    'Ваш  размер: {}')
 
@@ -68,6 +67,10 @@ class URLMap(db.Model):
     @staticmethod
     def create(original, short=None):
         """Создать объект в БД."""
+        if short in [None, ""]:
+            short = URLMap.get_unique_short_id()
+        if not fullmatch(PATTERN, short):
+            raise ValueError(PATTERN_ERROR)
         original_user_len = len(original)
         short_user_len = len(short)
         if original_user_len > ORIGINAL_MAX_LEN:
@@ -78,10 +81,6 @@ class URLMap(db.Model):
             raise ValueError(
                 SHORT_LEN_ERROR.format(SHORT_MAX_LEN, short_user_len)
             )
-        if short in [None, ""]:
-            short = URLMap.get_unique_short_id()
-        elif not fullmatch(PATTERN, short):
-            raise ValueError(PATTERN_ERROR)
         url_map = URLMap(
             original=original,
             short=short,
