@@ -3,6 +3,8 @@ from datetime import datetime
 import random
 from re import fullmatch
 
+from flask import url_for
+
 from settings import API_FIELDS, DOMAIN
 from yacut import db
 from yacut.error_handlers import InvalidAPIUsage
@@ -30,18 +32,20 @@ class URLMap(db.Model):
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 
     def to_dict(self):
-        """Преобразование объекта модели в словарь (словарь -> JSON)."""
+        """Преобразование объекта модели в словарь (слов
+        арь -> JSON)."""
         return dict(
             url=self.original,
-            short_link=DOMAIN + self.short,
+            short_link=url_for(
+                'url_routing', short=self.short, _external=True
+            ),
         )
 
     def from_dict(self, data):
         """Преобразование словаря в объект модели (JSON -> словарь).
         В пустой объект класса URLMap добавляются поля полученные в POST."""
-        for field in API_FIELDS:
-            if field in data:
-                setattr(self, API_FIELDS[field], data[field])
+        self.original = data['url']
+        self.short = data['custom_id']
 
     @staticmethod
     def get_unique_short_id():
