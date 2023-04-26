@@ -1,7 +1,7 @@
-from flask import flash, redirect, render_template
+from flask import flash, redirect, render_template, url_for
 
 from settings import DOMAIN
-from yacut import app, db
+from yacut import app
 from yacut.forms import URLMapForm
 from yacut.models import URLMap
 
@@ -13,18 +13,19 @@ ALREADY_EXISTS_MAIN = 'Имя {} уже занято!'
 def create_shortlink():
     """Страница генерации новой ссылки."""
     form = URLMapForm()
-    if form.validate_on_submit():
-        short = form.custom_id.data
-        if URLMap.get_short(short):
-            flash(ALREADY_EXISTS_MAIN.format(short))
-            return render_template('index.html', form=form)
-        URLMap.create(form.original_link.data, short)
-        return render_template(
-            'index.html',
-            form=form,
-            url_link=DOMAIN + short
-        )
-    return render_template('index.html', form=form)
+    if not form.validate_on_submit():
+        return render_template('index.html', form=form)
+    short = form.custom_id.data
+    if URLMap.get_short(short):
+        flash(ALREADY_EXISTS_MAIN.format(short))
+        return render_template('index.html', form=form)
+    URLMap.create(form.original_link.data, short)
+    return render_template(
+        'index.html',
+        form=form,
+        url_link=url_for('url_routing', short=short, _external=True)
+    )
+
 
 
 @app.route('/<string:short>')
