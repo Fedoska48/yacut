@@ -1,18 +1,5 @@
 import os
 
-# settings
-
-DOMAIN = 'http://localhost/'
-
-
-# messages
-
-# serizalization
-API_FIELDS = {
-    'url': 'original',
-    'custom_id': 'short',
-}
-
 
 class Config(object):
     SQLALCHEMY_DATABASE_URI = os.getenv(

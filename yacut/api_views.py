@@ -1,12 +1,9 @@
-from re import fullmatch
-
 from flask import jsonify, request
 
-from yacut import app, db
+from yacut import app
 
 from .error_handlers import InvalidAPIUsage
 from .models import URLMap
-
 
 ALREADY_EXISTS_API = 'Имя "{}" уже занято.'
 NO_DATA = 'Отсутствует тело запроса'

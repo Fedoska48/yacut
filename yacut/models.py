@@ -1,13 +1,11 @@
+import random
 import string
 from datetime import datetime
-import random
 from re import fullmatch
 
 from flask import url_for
 
-from settings import API_FIELDS, DOMAIN
 from yacut import db
-from yacut.error_handlers import InvalidAPIUsage
 
 # letters, digits
 PATTERN = r'^[a-zA-Z0-9]{1,16}$'
