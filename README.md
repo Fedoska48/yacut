@@ -56,11 +56,17 @@ pip install -r requirements.txt
 
 FLASK_APP=yacut
 
-SQLALCHEMY_DATABASE_URI=*путь к БД*
+SQLALCHEMY_DATABASE_URI=dialect+driver://username:password@host:port/database
 
 А также прописать SECRET_KEY
 
 Для работы в дебаг режиме необходимо указать FLASK_DEBUG=True
+
+* Выполнить миграции:
+
+```
+flask db upgrade
+```
 
 * Запустить проект можно командой в терминале:
 
@@ -70,4 +76,20 @@ flask run
 
 Спецификация к API в файле:
 
-**openapi.yml**
+**/api/id/** — POST-запрос на создание новой короткой ссылки;
+``` JSON
+{
+  "url": "string",
+  "custom_id": "string"
+}
+```
+
+
+
+**/api/id/<short_id>/** — GET-запрос на получение оригинальной ссылки по указанному короткому идентификатору.
+
+``` JSON
+{
+  "url": "string"
+}
+```
