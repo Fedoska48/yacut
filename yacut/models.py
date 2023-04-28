@@ -5,12 +5,10 @@ from re import fullmatch
 from flask import url_for
 
 from yacut import db
-from yacut.constants import (ORIGINAL_MAX_LEN, SHORT_MAX_LEN,
-                             LETTERS_AND_DIGITS, URL_POSTFIX_SIZE, PATTERN,
-                             URL_ROUTING_VIEW, MAX_DEPTH)
+from yacut.constants import (LETTERS_AND_DIGITS, MAX_DEPTH, ORIGINAL_MAX_LEN,
+                             PATTERN, SHORT_MAX_LEN, URL_POSTFIX_SIZE,
+                             URL_ROUTING_VIEW)
 from yacut.error_handlers import InvalidAPIUsage
-
-
 
 # messages
 PATTERN_ERROR = 'Указано недопустимое имя для короткой ссылки'
@@ -27,8 +25,7 @@ class URLMap(db.Model):
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 
     def to_dict(self):
-        """Преобразование объекта модели в словарь (слов
-        арь -> JSON)."""
+        """Преобразование объекта модели в словарь (словарь -> JSON)."""
         return dict(
             url=self.original,
             short_link=URLMap.get_short_url(self.short)
@@ -71,15 +68,18 @@ class URLMap(db.Model):
         if short in [None, ""]:
             short = URLMap.get_unique_short_id()
         original_user_len = len(original)
-        # есть же еще API интерфейс, который прямо не проверяет длину ссылки
+        # проверка длины для данных из API интерфейса
         if original_user_len > ORIGINAL_MAX_LEN:
             raise ValueError(
                 ORIGINAL_LEN_ERROR.format(ORIGINAL_MAX_LEN, original_user_len)
             )
         # размер проверяем через регулярку
-        # уникальность приходтся проверят отдельно из-за ТЗ в автотестах
+        # уникальность приходится проверят вне метода из-за ТЗ в автотестах
+        # разничный текст должен подниматься во views и api_views
         if not fullmatch(PATTERN, short):
-            #
+            # проверкой на соответствие в этом месте,отсекаем проверку "пустых"
+            # значений. Мне кажется, лучше проверить финальное значение,
+            # чем проверять пустоту или выводить пустоту из под проверки
             raise InvalidAPIUsage(PATTERN_ERROR)
         url_map = URLMap(
             original=original,

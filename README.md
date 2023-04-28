@@ -77,7 +77,7 @@ flask run
 ### Описание API:
 
 **/api/id/** — POST-запрос на создание новой короткой ссылки;
-``` JSON
+```json
 {
   "url": "string",
   "custom_id": "string"
@@ -88,7 +88,7 @@ flask run
 
 **/api/id/<short_id>/** — GET-запрос на получение оригинальной ссылки по указанному короткому идентификатору.
 
-``` JSON
+```json
 {
   "url": "string"
 }
