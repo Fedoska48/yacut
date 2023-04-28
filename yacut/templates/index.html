@@ -20,22 +20,18 @@
                 {{ form.original_link(type="text", class="form-control form-control-lg py-2 mb-3", id="form-title",
                   placeholder=form.original_link.label.text) }}
                 <p>
-                  {% if form.original_link.errors %}
-                    {% for error in form.original_link.errors %}
-                      <span style="color: red">{{ error }}</span>
-                    {% endfor %}
-                  {% endif %}
+                  {% for error in form.original_link.errors %}
+                    <span style="color: red">{{ error }}</span>
+                  {% endfor %}
                 </p>
               </div>
               <div>
                 {{ form.custom_id(type="url", class="form-control form-control-lg py-2 mb-3", id="form-link",
                   placeholder=form.custom_id.label.text) }}
                 <p>
-                  {% if form.custom_id.errors %}
-                    {% for error in form.custom_id.errors %}
-                      <span style="color: red">{{ error }}</span>
-                    {% endfor %}
-                  {% endif %}
+                  {% for error in form.custom_id.errors %}
+                    <span style="color: red">{{ error }}</span>
+                  {% endfor %}
                 </p>
               </div>
               <div class="d-grid gap-2 d-md-flex justify-content-center">
