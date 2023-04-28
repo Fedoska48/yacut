@@ -1,3 +1,5 @@
+from re import fullmatch
+
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, TextAreaField
 from wtforms.validators import (DataRequired, Length, Optional,
@@ -35,5 +37,5 @@ class URLMapForm(FlaskForm):
         short = self.custom_id.data
         if URLMap.get_short_id(short):
             raise ValidationError(ALREADY_EXISTS_FORM.format(short))
-        if not URLMap.validate_short_by_pattern(short):
+        if not fullmatch(PATTERN, short):
             raise ValidationError(PATTERN_ERROR, 400)

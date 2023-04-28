@@ -62,10 +62,6 @@ class URLMap(db.Model):
         return URLMap.query.filter_by(short=short).first_or_404()
 
     @staticmethod
-    def validate_short_by_pattern(short, pattern=PATTERN):
-        return fullmatch(pattern, short)
-
-    @staticmethod
     def get_short_url(postfix):
         return url_for(URL_ROUTING_VIEW, short=postfix, _external=True)
 
@@ -75,11 +71,14 @@ class URLMap(db.Model):
         if short in [None, ""]:
             short = URLMap.get_unique_short_id()
         original_user_len = len(original)
+        # есть же еще API интерфейс, который прямо не проверяет длину ссылки
         if original_user_len > ORIGINAL_MAX_LEN:
             raise ValueError(
                 ORIGINAL_LEN_ERROR.format(ORIGINAL_MAX_LEN, original_user_len)
             )
-        if not URLMap.validate_short_by_pattern(short):
+        # размер проверяем через регулярку
+        # уникальность приходтся проверят отдельно из-за ТЗ в автотестах
+        if not fullmatch(PATTERN, short):
             #
             raise InvalidAPIUsage(PATTERN_ERROR)
         url_map = URLMap(
