@@ -15,7 +15,6 @@ class InvalidUsage(Exception):
     def to_dict(self):
         return dict(message=self.message)
 
-
 class InvalidAPIUsage(InvalidUsage):
     pass
 
