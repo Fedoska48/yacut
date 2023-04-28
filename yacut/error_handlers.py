@@ -3,7 +3,7 @@ from flask import render_template, jsonify
 from . import app, db
 
 
-class InvalidAPIUsage(Exception):
+class InvalidUsage(Exception):
     status_code = 400
 
     def __init__(self, message, status_code=None):
@@ -14,6 +14,10 @@ class InvalidAPIUsage(Exception):
 
     def to_dict(self):
         return dict(message=self.message)
+
+
+class InvalidAPIUsage(InvalidUsage):
+    pass
 
 
 @app.errorhandler(InvalidAPIUsage)

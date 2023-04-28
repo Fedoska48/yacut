@@ -8,12 +8,13 @@ from flask import url_for
 from yacut import db
 from yacut.error_handlers import InvalidAPIUsage
 
-# letters, digits
+# letters, digits, constants
 PATTERN = r'^[a-zA-Z0-9]{1,16}$'
 LETTERS_AND_DIGITS = string.ascii_letters + string.digits
 URL_POSTFIX_SIZE = 6
 SHORT_MAX_LEN = 16
 ORIGINAL_MAX_LEN = 512
+URL_ROUTING_VIEW = 'url_routing'
 
 # messages
 PATTERN_ERROR = 'Указано недопустимое имя для короткой ссылки'
@@ -34,9 +35,7 @@ class URLMap(db.Model):
         арь -> JSON)."""
         return dict(
             url=self.original,
-            short_link=url_for(
-                'url_routing', short=self.short, _external=True
-            ),
+            short_link=URLMap.get_short_url(self.short)
         )
 
     def from_dict(self, data):
@@ -68,6 +67,10 @@ class URLMap(db.Model):
     @staticmethod
     def validate_short_by_pattern(short, pattern=PATTERN):
         return fullmatch(pattern, short)
+
+    @staticmethod
+    def get_short_url(postfix):
+        return url_for(URL_ROUTING_VIEW, short=postfix, _external=True)
 
     @staticmethod
     def create(original, short=None):

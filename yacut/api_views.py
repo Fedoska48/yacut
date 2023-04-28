@@ -20,9 +20,15 @@ def create_shortlink_api():
     if 'url' not in data:
         raise InvalidAPIUsage(REQUIRED_URL_FIELD)
     short = data.get('custom_id')
+    # для api_views и views поднимаются разные сообщения после проверки ниже
+    # т.е. если эту проверку положить внутрь create, то автотесты не пропустят
     if URLMap.get_short(short) is not None:
         raise InvalidAPIUsage(ALREADY_EXISTS_API.format(short))
-    return jsonify(URLMap.create(data['url'], short).to_dict()), 201
+    try:
+        url_map = URLMap.create(data['url'], short)
+    except ValueError as error:
+        raise InvalidAPIUsage(error)
+    return jsonify(url_map.to_dict()), 201
 
 
 @app.route('/api/id/<short_id>/', methods=['GET'])
