@@ -17,7 +17,7 @@ def create_shortlink():
     short = form.custom_id.data
     # для api_views и views поднимаются разные сообщения после проверки ниже
     # т.е. если эту проверку положить внутрь create, то автотесты не пропустят
-    if URLMap.get_short(short):
+    if URLMap.get_short_id(short):
         flash(ALREADY_EXISTS_MAIN.format(short))
         return render_template('index.html', form=form)
     try:
@@ -34,4 +34,4 @@ def create_shortlink():
 @app.route('/<string:short>')
 def url_routing(short):
     """Маршрутизация ссылки short в original."""
-    return redirect(URLMap.get_short_or_404(short).original)
+    return redirect(URLMap.get_short_id_or_404(short).original)

@@ -22,7 +22,7 @@ def create_shortlink_api():
     short = data.get('custom_id')
     # для api_views и views поднимаются разные сообщения после проверки ниже
     # т.е. если эту проверку положить внутрь create, то автотесты не пропустят
-    if URLMap.get_short(short) is not None:
+    if URLMap.get_short_id(short) is not None:
         raise InvalidAPIUsage(ALREADY_EXISTS_API.format(short))
     try:
         url_map = URLMap.create(data['url'], short)
@@ -34,7 +34,7 @@ def create_shortlink_api():
 @app.route('/api/id/<short_id>/', methods=['GET'])
 def get_original_link(short_id):
     """Получение оригинальной ссылки по указанному короткому идентификатору."""
-    url_map = URLMap.get_short(short_id)
+    url_map = URLMap.get_short_id(short_id)
     if url_map is not None:
         return jsonify({'url': url_map.original}), 200
     raise InvalidAPIUsage(SHORT_ID_NOT_EXISTS, 404)

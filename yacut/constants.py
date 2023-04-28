@@ -8,3 +8,4 @@ ORIGINAL_MAX_LEN = 512
 URL_ROUTING_VIEW = 'url_routing'
 LETTERS_AND_DIGITS = string.ascii_letters + string.digits
 PATTERN = f'[{re.escape(LETTERS_AND_DIGITS)}]{{{MIN_LEN},{SHORT_MAX_LEN}}}'
+MAX_DEPTH = 5

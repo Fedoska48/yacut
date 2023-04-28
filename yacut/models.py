@@ -7,7 +7,7 @@ from flask import url_for
 from yacut import db
 from yacut.constants import (ORIGINAL_MAX_LEN, SHORT_MAX_LEN,
                              LETTERS_AND_DIGITS, URL_POSTFIX_SIZE, PATTERN,
-                             URL_ROUTING_VIEW)
+                             URL_ROUTING_VIEW, MAX_DEPTH)
 from yacut.error_handlers import InvalidAPIUsage
 
 
@@ -41,22 +41,23 @@ class URLMap(db.Model):
         self.short = data['custom_id']
 
     @staticmethod
-    def get_unique_short_id():
+    def get_unique_short_id(_max_depth=MAX_DEPTH):
         """Генератор шестизначного постфикса для ссылки."""
         short_url_postfix = ''.join(
             random.sample(LETTERS_AND_DIGITS, URL_POSTFIX_SIZE)
         )
-        if URLMap.get_short(short_url_postfix):
-            URLMap.get_unique_short_id()
+        if URLMap.get_short_id(short_url_postfix):
+            for _ in range(_max_depth):
+                URLMap.get_unique_short_id()
         return short_url_postfix
 
     @staticmethod
-    def get_short(short):
+    def get_short_id(short):
         """Получить объект по постфиксу короткой ссылки."""
         return URLMap.query.filter_by(short=short).first()
 
     @staticmethod
-    def get_short_or_404(short):
+    def get_short_id_or_404(short):
         """Получить объект по постфиксу короткой ссылки. Или получить 404"""
         return URLMap.query.filter_by(short=short).first_or_404()
 

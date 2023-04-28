@@ -33,7 +33,7 @@ class URLMapForm(FlaskForm):
 
     def validate_custom_id(self, custom_id):
         short = self.custom_id.data
-        if URLMap.get_short(short):
+        if URLMap.get_short_id(short):
             raise ValidationError(ALREADY_EXISTS_FORM.format(short))
         if not URLMap.validate_short_by_pattern(short):
             raise ValidationError(PATTERN_ERROR, 400)
