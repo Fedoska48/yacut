@@ -1,20 +1,16 @@
 import random
-import string
 from datetime import datetime
 from re import fullmatch
 
 from flask import url_for
 
 from yacut import db
+from yacut.constants import (ORIGINAL_MAX_LEN, SHORT_MAX_LEN,
+                             LETTERS_AND_DIGITS, URL_POSTFIX_SIZE, PATTERN,
+                             URL_ROUTING_VIEW)
 from yacut.error_handlers import InvalidAPIUsage
 
-# letters, digits, constants
-PATTERN = r'^[a-zA-Z0-9]{1,16}$'
-LETTERS_AND_DIGITS = string.ascii_letters + string.digits
-URL_POSTFIX_SIZE = 6
-SHORT_MAX_LEN = 16
-ORIGINAL_MAX_LEN = 512
-URL_ROUTING_VIEW = 'url_routing'
+
 
 # messages
 PATTERN_ERROR = 'Указано недопустимое имя для короткой ссылки'
@@ -77,13 +73,13 @@ class URLMap(db.Model):
         """Создать объект в БД."""
         if short in [None, ""]:
             short = URLMap.get_unique_short_id()
-
         original_user_len = len(original)
         if original_user_len > ORIGINAL_MAX_LEN:
             raise ValueError(
                 ORIGINAL_LEN_ERROR.format(ORIGINAL_MAX_LEN, original_user_len)
             )
         if not URLMap.validate_short_by_pattern(short):
+            #
             raise InvalidAPIUsage(PATTERN_ERROR)
         url_map = URLMap(
             original=original,

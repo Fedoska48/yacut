@@ -1,9 +1,10 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, TextAreaField
-from wtforms.validators import DataRequired, Length, Optional, ValidationError
+from wtforms.validators import (DataRequired, Length, Optional,
+                                ValidationError, Regexp)
 
-from yacut.models import (LETTERS_AND_DIGITS, ORIGINAL_MAX_LEN, PATTERN_ERROR,
-                          SHORT_MAX_LEN, URLMap)
+from yacut.constants import SHORT_MAX_LEN, PATTERN
+from yacut.models import ORIGINAL_MAX_LEN, PATTERN_ERROR, URLMap
 
 ORIGINAL_LINK_FIELD_TEXT = 'Вставьте ссылку для обработки'
 CUSTOM_ID_FIELD_TEXT = 'Вариант короткой ссылки'
@@ -22,7 +23,11 @@ class URLMapForm(FlaskForm):
     )
     custom_id = StringField(
         CUSTOM_ID_FIELD_TEXT,
-        validators=[Length(max=SHORT_MAX_LEN), Optional()]
+        validators=[
+            Length(max=SHORT_MAX_LEN),
+            Optional(),
+            Regexp(PATTERN, message=PATTERN_ERROR)
+        ]
     )
     submit = SubmitField(SUBMIT_TEXT)
 
@@ -30,6 +35,5 @@ class URLMapForm(FlaskForm):
         short = self.custom_id.data
         if URLMap.get_short(short):
             raise ValidationError(ALREADY_EXISTS_FORM.format(short))
-        for char in short:
-            if char not in LETTERS_AND_DIGITS:
-                raise ValidationError(PATTERN_ERROR, 400)
+        if not URLMap.validate_short_by_pattern(short):
+            raise ValidationError(PATTERN_ERROR, 400)

@@ -1,4 +1,4 @@
-from flask import flash, redirect, render_template, url_for
+from flask import flash, redirect, render_template
 
 from yacut import app
 from yacut.error_handlers import InvalidUsage
