@@ -5,7 +5,7 @@ from re import fullmatch
 from flask import url_for
 
 from yacut import db
-from yacut.constants import (LETTERS_AND_DIGITS, MAX_DEPTH, ORIGINAL_MAX_LEN,
+from yacut.constants import (SYMBOLS, RECURSION_ATTEMPT, ORIGINAL_MAX_LEN,
                              PATTERN, SHORT_MAX_LEN, URL_POSTFIX_SIZE,
                              URL_ROUTING_VIEW)
 from yacut.error_handlers import InvalidAPIUsage
@@ -38,13 +38,13 @@ class URLMap(db.Model):
         self.short = data['custom_id']
 
     @staticmethod
-    def get_unique_short_id(_max_depth=MAX_DEPTH):
+    def get_unique_short_id(_recursion_attempt=RECURSION_ATTEMPT):
         """Генератор шестизначного постфикса для ссылки."""
         short_url_postfix = ''.join(
-            random.sample(LETTERS_AND_DIGITS, URL_POSTFIX_SIZE)
+            random.sample(SYMBOLS, URL_POSTFIX_SIZE)
         )
         if URLMap.get_short_id(short_url_postfix):
-            for _ in range(_max_depth):
+            for _ in range(_recursion_attempt):
                 URLMap.get_unique_short_id()
         return short_url_postfix
 

@@ -3,9 +3,10 @@ import string
 
 URL_POSTFIX_SIZE = 6
 SHORT_MAX_LEN = 16
-MIN_LEN = 1
-ORIGINAL_MAX_LEN = 512
+ORIGINAL_MAX_LEN = 2048
 URL_ROUTING_VIEW = 'url_routing'
-LETTERS_AND_DIGITS = string.ascii_letters + string.digits
-PATTERN = f'[{re.escape(LETTERS_AND_DIGITS)}]{{{MIN_LEN},{SHORT_MAX_LEN}}}'
-MAX_DEPTH = 5
+SYMBOLS = string.ascii_letters + string.digits
+PATTERN_SYMBOLS = f'[{re.escape(SYMBOLS)}]'
+PATTERN_LEN = f'{{1,{SHORT_MAX_LEN}}}'
+PATTERN = PATTERN_SYMBOLS + PATTERN_LEN
+RECURSION_ATTEMPT = 5
