@@ -5,11 +5,11 @@ from yacut import app
 from .error_handlers import InvalidAPIUsage
 from .models import URLMap
 
-ALREADY_EXISTS_API = 'Имя "{}" уже занято.'
+
 NO_DATA = 'Отсутствует тело запроса'
 REQUIRED_URL_FIELD = '"url" является обязательным полем!'
 SHORT_ID_NOT_EXISTS = 'Указанный id не найден'
-
+ALREADY_EXISTS_API = 'Имя "{}" уже занято.'
 
 @app.route('/api/id/', methods=['POST'])
 def create_shortlink_api():
@@ -22,12 +22,10 @@ def create_shortlink_api():
     short = data.get('custom_id')
     # для api_views и views поднимаются разные сообщения после проверки ниже
     # т.е. если эту проверку положить внутрь create, то автотесты не пропустят
-    if URLMap.get_short_id(short) is not None:
-        raise InvalidAPIUsage(ALREADY_EXISTS_API.format(short))
     try:
         url_map = URLMap.create(data['url'], short)
-    except ValueError as error:
-        raise InvalidAPIUsage(error)
+    except ValueError:
+        raise InvalidAPIUsage(ALREADY_EXISTS_API.format(short))
     return jsonify(url_map.to_dict()), 201
 
 

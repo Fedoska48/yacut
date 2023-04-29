@@ -17,17 +17,15 @@ def create_shortlink():
     short = form.custom_id.data
     # для api_views и views поднимаются разные сообщения после проверки ниже
     # т.е. если эту проверку положить внутрь create, то автотесты не пропустят
-    if URLMap.get_short_id(short):
-        flash(ALREADY_EXISTS_MAIN.format(short))
-        return render_template('index.html', form=form)
     try:
         url_map = URLMap.create(form.original_link.data, short)
-    except ValueError as error:
-        raise InvalidUsage(error)
+    except ValueError:
+        flash(ALREADY_EXISTS_MAIN.format(short))
+        return render_template('index.html', form=form)
     return render_template(
         'index.html',
         form=form,
-        url_link=URLMap.get_short_url(url_map.short)
+        short_url=URLMap.get_short_url(url_map.short)
     )
 
 
