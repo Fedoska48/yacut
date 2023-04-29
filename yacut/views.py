@@ -1,7 +1,7 @@
 from flask import flash, redirect, render_template
 
 from yacut import app
-from yacut.error_handlers import InvalidUsage
+from yacut.error_handlers import UniqueGenerationError
 from yacut.forms import URLMapForm
 from yacut.models import URLMap
 
@@ -15,8 +15,8 @@ def create_shortlink():
     if not form.validate_on_submit():
         return render_template('index.html', form=form)
     short = form.custom_id.data
-    # для api_views и views поднимаются разные сообщения после проверки ниже
-    # т.е. если эту проверку положить внутрь create, то автотесты не пропустят
+    if not short:
+        short = URLMap.get_unique_short()
     try:
         url_map = URLMap.create(form.original_link.data, short)
     except ValueError:
@@ -32,4 +32,4 @@ def create_shortlink():
 @app.route('/<string:short>')
 def url_routing(short):
     """Маршрутизация ссылки short в original."""
-    return redirect(URLMap.get_short_id_or_404(short).original)
+    return redirect(URLMap.get_url_map_or_404(short).original)

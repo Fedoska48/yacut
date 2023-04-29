@@ -2,8 +2,9 @@ from re import fullmatch
 
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, TextAreaField
-from wtforms.validators import (DataRequired, Length, Optional,
-                                ValidationError, Regexp)
+from wtforms.validators import (
+    DataRequired, Length, Optional, ValidationError, Regexp
+)
 
 from yacut.constants import SHORT_MAX_LEN, PATTERN
 from yacut.models import ORIGINAL_MAX_LEN, PATTERN_ERROR, URLMap
@@ -35,5 +36,5 @@ class URLMapForm(FlaskForm):
 
     def validate_custom_id(self, custom_id):
         short = self.custom_id.data
-        if URLMap.get_short_id(short):
+        if URLMap.get_url_map(short):
             raise ValidationError(ALREADY_EXISTS_FORM.format(short))

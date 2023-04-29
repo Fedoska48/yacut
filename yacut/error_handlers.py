@@ -3,7 +3,7 @@ from flask import render_template, jsonify
 from . import app, db
 
 
-class InvalidUsage(Exception):
+class InvalidAPIUsage(Exception):
     status_code = 400
 
     def __init__(self, message, status_code=None):
@@ -16,7 +16,7 @@ class InvalidUsage(Exception):
         return dict(message=self.message)
 
 
-class InvalidAPIUsage(InvalidUsage):
+class UniqueGenerationError(Exception):
     pass
 
 
