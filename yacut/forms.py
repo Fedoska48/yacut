@@ -37,5 +37,3 @@ class URLMapForm(FlaskForm):
         short = self.custom_id.data
         if URLMap.get_short_id(short):
             raise ValidationError(ALREADY_EXISTS_FORM.format(short))
-        if not fullmatch(PATTERN, short):
-            raise ValidationError(PATTERN_ERROR, 400)
