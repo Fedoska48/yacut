@@ -5,10 +5,10 @@ from yacut import app
 from .error_handlers import InvalidAPIUsage
 from .models import URLMap
 
-
 NO_DATA = 'Отсутствует тело запроса'
 REQUIRED_URL_FIELD = '"url" является обязательным полем!'
 SHORT_NOT_EXISTS = 'Указанный id не найден'
+
 
 @app.route('/api/id/', methods=['POST'])
 def create_shortlink_api():

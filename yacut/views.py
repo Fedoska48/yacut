@@ -1,7 +1,6 @@
 from flask import flash, redirect, render_template
 
 from yacut import app
-from yacut.error_handlers import UniqueGenerationError
 from yacut.forms import URLMapForm
 from yacut.models import URLMap
 

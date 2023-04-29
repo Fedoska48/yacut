@@ -6,7 +6,7 @@ from flask import url_for
 
 from yacut import db
 from yacut.constants import (
-    CREATE_UNIQUE_ATTEMPT, ORIGINAL_MAX_LEN, PATTERN,  SHORT_MAX_LEN, SYMBOLS,
+    CREATE_UNIQUE_ATTEMPT, ORIGINAL_MAX_LEN, PATTERN, SHORT_MAX_LEN, SYMBOLS,
     URL_POSTFIX_SIZE, URL_ROUTING_VIEW
 )
 from yacut.error_handlers import UniqueGenerationError
