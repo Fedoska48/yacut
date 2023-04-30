@@ -35,16 +35,15 @@ class URLMap(db.Model):
         )
 
     @staticmethod
-    def get_unique_short(_attempt=CREATE_UNIQUE_ATTEMPT):
+    def get_unique_short(attempt=CREATE_UNIQUE_ATTEMPT):
         """Генератор шестизначного постфикса для ссылки."""
-        for _ in range(_attempt):
+        for _ in range(attempt):
             short = ''.join(
                 random.sample(SYMBOLS, URL_POSTFIX_SIZE)
             )
             if not URLMap.get_url_map(short):
                 return short
-            else:
-                raise UniqueGenerationError(GENERATION_ERROR)
+        raise UniqueGenerationError(GENERATION_ERROR)
 
     @staticmethod
     def get_url_map(short):
@@ -65,7 +64,6 @@ class URLMap(db.Model):
         """Создать объект в БД."""
         if validate:
             original_user_len = len(original)
-            # проверка длины для данных из API интерфейса
             if original_user_len > ORIGINAL_MAX_LEN:
                 raise ValueError(
                     ORIGINAL_LEN_ERROR.format(original_user_len)

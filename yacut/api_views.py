@@ -2,7 +2,7 @@ from flask import jsonify, request
 
 from yacut import app
 
-from .error_handlers import InvalidAPIUsage
+from .error_handlers import InvalidAPIUsage, UniqueGenerationError
 from .models import URLMap
 
 NO_DATA = 'Отсутствует тело запроса'
@@ -18,11 +18,12 @@ def create_shortlink_api():
         raise InvalidAPIUsage(NO_DATA)
     if 'url' not in data:
         raise InvalidAPIUsage(REQUIRED_URL_FIELD)
-    short = data.get('custom_id')
     try:
-        url_map = URLMap.create(data['url'], short, validate=True)
+        url_map = URLMap.create(data['url'], data.get('custom_id'), validate=True)
     except ValueError as error:
         raise InvalidAPIUsage(str(error))
+    except UniqueGenerationError as error:
+        print(error)
     return jsonify(url_map.to_dict()), 201
 
 
