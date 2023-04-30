@@ -14,18 +14,16 @@ def create_shortlink():
     if not form.validate_on_submit():
         return render_template('index.html', form=form)
     short = form.custom_id.data
-    if not short:
-        short = URLMap.get_unique_short()
     try:
-        url_map = URLMap.create(form.original_link.data, short)
+        return render_template(
+            'index.html',
+            form=form,
+            short_url=URLMap.get_short_url(
+                URLMap.create(form.original_link.data, short).short)
+        )
     except ValueError:
         flash(ALREADY_EXISTS_MAIN.format(short))
         return render_template('index.html', form=form)
-    return render_template(
-        'index.html',
-        form=form,
-        short_url=URLMap.get_short_url(url_map.short)
-    )
 
 
 @app.route('/<string:short>')

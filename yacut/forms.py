@@ -4,7 +4,7 @@ from wtforms.validators import (
     DataRequired, Length, Optional, ValidationError, Regexp
 )
 
-from yacut.constants import SHORT_MAX_LEN, PATTERN
+from yacut.constants import SHORT_MAX_LEN, PATTERN_SYMBOLS, PATTERN_LEN
 from yacut.models import ORIGINAL_MAX_LEN, PATTERN_ERROR, URLMap
 
 ORIGINAL_LINK_FIELD_TEXT = 'Вставьте ссылку для обработки'
@@ -27,7 +27,7 @@ class URLMapForm(FlaskForm):
         validators=[
             Length(max=SHORT_MAX_LEN),
             Optional(),
-            Regexp(PATTERN, message=PATTERN_ERROR)
+            Regexp(PATTERN_SYMBOLS + PATTERN_LEN, message=PATTERN_ERROR)
         ]
     )
     submit = SubmitField(SUBMIT_TEXT)

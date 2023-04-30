@@ -19,12 +19,15 @@ def create_shortlink_api():
     if 'url' not in data:
         raise InvalidAPIUsage(REQUIRED_URL_FIELD)
     try:
-        url_map = URLMap.create(data['url'], data.get('custom_id'), validate=True)
+        return jsonify(URLMap.create(
+            data['url'],
+            data.get('custom_id'),
+            validate=True
+        ).to_dict()), 201
     except ValueError as error:
         raise InvalidAPIUsage(str(error))
     except UniqueGenerationError as error:
         print(error)
-    return jsonify(url_map.to_dict()), 201
 
 
 @app.route('/api/id/<short>/', methods=['GET'])

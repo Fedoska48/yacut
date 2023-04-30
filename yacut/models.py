@@ -6,8 +6,8 @@ from flask import url_for
 
 from yacut import db
 from yacut.constants import (
-    CREATE_UNIQUE_ATTEMPT, ORIGINAL_MAX_LEN, PATTERN, SHORT_MAX_LEN, SYMBOLS,
-    URL_POSTFIX_SIZE, URL_ROUTING_VIEW
+    CREATE_UNIQUE_ATTEMPT, ORIGINAL_MAX_LEN, SHORT_MAX_LEN, SYMBOLS,
+    URL_POSTFIX_SIZE, URL_ROUTING_VIEW, PATTERN_SYMBOLS, PATTERN_LEN
 )
 from yacut.error_handlers import UniqueGenerationError
 
@@ -62,6 +62,8 @@ class URLMap(db.Model):
     @staticmethod
     def create(original, short=None, validate=False):
         """Создать объект в БД."""
+        if short in [None, ""]:
+            short = URLMap.get_unique_short()
         if validate:
             original_user_len = len(original)
             if original_user_len > ORIGINAL_MAX_LEN:
@@ -70,9 +72,7 @@ class URLMap(db.Model):
                 )
             if URLMap.get_url_map(short) is not None:
                 raise ValueError(ALREADY_EXISTS.format(short))
-            if short in [None, ""]:
-                short = URLMap.get_unique_short()
-            elif not fullmatch(PATTERN, short):
+            if not fullmatch(PATTERN_SYMBOLS + PATTERN_LEN, short):
                 raise ValueError(PATTERN_ERROR)
         url_map = URLMap(
             original=original,
