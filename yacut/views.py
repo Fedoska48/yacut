@@ -24,9 +24,9 @@ def create_shortlink():
         )
     except ValueError:
         flash(ALREADY_EXISTS_MAIN.format(short))
-        return render_template('index.html', form=form)
     except UniqueGenerationError as error:
         flash(str(error))
+    return render_template('index.html', form=form)
 
 
 @app.route('/<string:short>')

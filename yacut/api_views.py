@@ -26,11 +26,7 @@ def create_shortlink_api():
             data.get('custom_id'),
             validate=True
         ).to_dict()), 201
-    except ValueError as error:
-        raise InvalidAPIUsage(str(error))
-    except UniqueGenerationError as error:
-        raise InvalidAPIUsage(str(error))
-    except UniqueValidationError as error:
+    except (ValueError, UniqueGenerationError, UniqueValidationError) as error:
         raise InvalidAPIUsage(str(error))
 
 
