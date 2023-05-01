@@ -1,6 +1,7 @@
 from flask import flash, redirect, render_template
 
 from yacut import app
+from yacut.error_handlers import UniqueGenerationError
 from yacut.forms import URLMapForm
 from yacut.models import URLMap
 
@@ -24,6 +25,8 @@ def create_shortlink():
     except ValueError:
         flash(ALREADY_EXISTS_MAIN.format(short))
         return render_template('index.html', form=form)
+    except UniqueGenerationError as error:
+        flash(str(error))
 
 
 @app.route('/<string:short>')

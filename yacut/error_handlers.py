@@ -20,6 +20,10 @@ class UniqueGenerationError(Exception):
     pass
 
 
+class UniqueValidationError(Exception):
+    pass
+
+
 @app.errorhandler(InvalidAPIUsage)
 def invalid_api_usage(error):
     return jsonify(error.to_dict()), error.status_code

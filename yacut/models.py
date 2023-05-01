@@ -1,15 +1,15 @@
 import random
 from datetime import datetime
-from re import fullmatch
+from re import fullmatch, match
 
 from flask import url_for
 
 from yacut import db
 from yacut.constants import (
-    CREATE_UNIQUE_ATTEMPT, ORIGINAL_MAX_LEN, SHORT_MAX_LEN, SYMBOLS,
-    URL_POSTFIX_SIZE, URL_ROUTING_VIEW, PATTERN_SYMBOLS, PATTERN_LEN
+    CREATE_UNIQUE_ATTEMPT, ORIGINAL_MAX_LEN, PATTERN_SYMBOLS, SHORT_MAX_LEN,
+    SYMBOLS, URL_POSTFIX_SIZE, URL_ROUTING_VIEW
 )
-from yacut.error_handlers import UniqueGenerationError
+from yacut.error_handlers import UniqueGenerationError, UniqueValidationError
 
 # messages
 PATTERN_ERROR = 'Указано недопустимое имя для короткой ссылки'
@@ -36,7 +36,7 @@ class URLMap(db.Model):
 
     @staticmethod
     def get_unique_short(attempt=CREATE_UNIQUE_ATTEMPT):
-        """Генератор шестизначного постфикса для ссылки."""
+        """Генератор short случайным образом из латинских букв и чисел."""
         for _ in range(attempt):
             short = ''.join(
                 random.sample(SYMBOLS, URL_POSTFIX_SIZE)
@@ -62,18 +62,22 @@ class URLMap(db.Model):
     @staticmethod
     def create(original, short=None, validate=False):
         """Создать объект в БД."""
+        original_user_len = len(original)
+        if original_user_len > ORIGINAL_MAX_LEN:
+            raise ValueError(
+                ORIGINAL_LEN_ERROR.format(original_user_len)
+            )
         if short in [None, ""]:
             short = URLMap.get_unique_short()
+            validate = False
         if validate:
-            original_user_len = len(original)
-            if original_user_len > ORIGINAL_MAX_LEN:
-                raise ValueError(
-                    ORIGINAL_LEN_ERROR.format(original_user_len)
-                )
-            if URLMap.get_url_map(short) is not None:
-                raise ValueError(ALREADY_EXISTS.format(short))
-            if not fullmatch(PATTERN_SYMBOLS + PATTERN_LEN, short):
+            short_user_len = len(short)
+            if short_user_len > SHORT_MAX_LEN:
                 raise ValueError(PATTERN_ERROR)
+            if not fullmatch(PATTERN_SYMBOLS, short):
+                raise ValueError(PATTERN_ERROR)
+            if URLMap.get_url_map(short) is not None:
+                raise UniqueValidationError(ALREADY_EXISTS.format(short))
         url_map = URLMap(
             original=original,
             short=short,
