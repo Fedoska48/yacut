@@ -62,18 +62,12 @@ class URLMap(db.Model):
     @staticmethod
     def create(original, short=None, validate=False):
         """Создать объект в БД."""
-        original_user_len = len(original)
-        # необходимо валидировать урл, который не прошел через форму: АПИшный
-        # два случая: с пустой коротюлькой и заполненной. Оба с флагом True
-        # если пустая - генерируем коротюльку, переставляем флаг на False,
-        # но как-то надо валидировать длинную ссылку в этом случае,
-        # либо 1) перехватывать тут чтобы сразу уходило на создание объекта
-        # либо 2) валидировать в api_views до попадания в метод create
-        # к тому же это "легкая" проверка без запросов в БД
-        if original_user_len > ORIGINAL_MAX_LEN:
-            raise ValueError(
-                ORIGINAL_LEN_ERROR.format(original_user_len)
-            )
+        if validate:
+            original_user_len = len(original)
+            if original_user_len > ORIGINAL_MAX_LEN:
+                raise ValueError(
+                    ORIGINAL_LEN_ERROR.format(original_user_len)
+                )
         if short in [None, ""]:
             short = URLMap.get_unique_short()
             validate = False
