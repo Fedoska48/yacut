@@ -1,6 +1,6 @@
 import random
 from datetime import datetime
-from re import fullmatch, match
+from re import fullmatch
 
 from flask import url_for
 
